@@ -1,0 +1,57 @@
+<form (ngSubmit)="onSubmit()" >
+  <div class="row">
+    <div class="col">
+      <div class="form-group">
+        <label for="restaurantName">Name</label>
+        <input
+          type="text"
+          name="restaurantName"
+          [(ngModel)]="restaurantName"
+          class="form-control"
+          placeholder="Restaurant Name"
+        />
+      </div>
+    </div>
+    <div class="col">
+      <div class="form-group">
+        <label for="restaurantCoordinate"> Coordinate</label>
+        <input
+          type="text"
+          name="restaurantCoordinate"
+          [(ngModel)]="restaurantCoordinate"
+          class="form-control"
+          placeholder="Coordinate"
+        />
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col">
+      <label for="restaurantCoordinate"> Type</label>
+      <div class="form-group">
+        <select
+          name="restaurantType"
+          [(ngModel)]="restaurantType"
+          class="form-control"
+        >
+          <option *ngFor="let type of types | slice:1" [ngValue]="type">
+            {{ type }}
+          </option>
+        </select>
+      </div>
+    </div>
+    <div class="col">
+      <label for="restaurantImage"> Image</label>
+      <div class="form-group">
+        <input
+          type="file"
+          class="form-control-file"
+          id="exampleFormControlFile1"
+        />
+      </div>
+    </div>
+  </div>
+  <div class="col mt-4">
+    <input type="submit" class="form-control bg-success text-white" value="Save" />
+  </div>
+</form>
