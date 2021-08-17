@@ -1,0 +1,23 @@
+<table class="table">
+  <thead class="bg-grey">
+    <tr>
+      <th scope="col">Restaurant Name</th>
+      <th scope="col">Restaurant Image</th>
+      <th scope="col">Coordinate</th>
+      <th scope="col">Type</th>
+      <th scope="col">Actions</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <tr
+      app-restaurant
+      *ngFor="
+        let restaurant of filteredRestaurants
+          | tableFilter: selectedType
+          | tableSearch: searchText
+      "
+      [restaurant]="restaurant"
+    ></tr>
+  </tbody>
+</table>

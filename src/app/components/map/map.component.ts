@@ -1,33 +1,31 @@
-import { Component, AfterViewInit, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import * as L from 'leaflet';
 import { Restaurant } from '../../interfaces/restaurant';
-import { RestaurantService } from '../../services/restaurant.service';
-import {
-  LOAD_RESTAURANTS,
-  LOAD_RESTAURANTS_SUCCESS,
-  DELETE_RESTAURANT,
-  ADD_RESTAURANT,
-} from '../../state/actions/restaurant.actions';
-import { createFeatureSelector, createSelector, Store } from '@ngrx/store';
+
+import { Store } from '@ngrx/store';
 import { AppState } from '../../app.state';
-import { Observable } from 'rxjs';
+import { ActivatedRoute } from '@angular/router';
+import { Location } from '@angular/common';
 @Component({
   selector: 'app-map',
   templateUrl: './map.component.html',
   styleUrls: ['./map.component.css'],
 })
-export class MapComponent implements AfterViewInit {
+export class MapComponent implements OnInit {
+  map: L.Map;
+  selectedRestaurantId: string | null;
   selectedRestaurant: Restaurant;
-  map: any;
-  restaurants$: Observable<Restaurant[]>;
+  restaurants: Restaurant[];
 
-  constructor(private store: Store<AppState>) {
-    this.restaurants$ = this.store.select('restaurants');
-  }
+  constructor(
+    private store: Store<AppState>,
+    private route: ActivatedRoute,
+    private location: Location
+  ) {}
   private initMap(): void {
     this.map = L.map('map', {
       center: [1.540149, 103.645251],
-      zoom: 12,
+      zoom: 16,
     });
 
     const tiles = L.tileLayer(
@@ -40,23 +38,32 @@ export class MapComponent implements AfterViewInit {
       }
     );
     tiles.addTo(this.map);
+  }
 
-    this.restaurants$.subscribe((value) =>
-      value.forEach((e) => {
-        console.log(e);
+  ngOnInit(): void {
+    this.initMap();
+    console.log('map inited');
+    this.store.select('restaurants').subscribe((data) => {
+      this.restaurants = data;
+      this.selectedRestaurantId = this.route.snapshot.paramMap.get('id');
+      this.restaurants.forEach((e) => {
+        if (e._id == this.selectedRestaurantId) {
+          this.selectedRestaurant = e;
+        }
         L.marker([e.coordinate[0], e.coordinate[1]])
           .bindPopup(e.name)
           .addTo(this.map);
-      })
-    );
-  }
+      });
+    });
 
-  ngAfterViewInit(): void {
-    this.store.dispatch({ type: LOAD_RESTAURANTS.type });
-    const test = this.store.select('restaurants');
-    console.log(test);
-    
-
-    this.initMap();
+    this.map.eachLayer((layer: any) => {
+      if (layer.getPopup()?.getContent() == this.selectedRestaurant.name) {
+        layer._icon.style.backgroundColor = 'black';
+        this.map.panTo([
+          this.selectedRestaurant.coordinate[0],
+          this.selectedRestaurant.coordinate[1],
+        ]);
+      }
+    });
   }
 }

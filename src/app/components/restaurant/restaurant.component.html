@@ -1,1 +1,16 @@
-<p>restaurant works!</p>
+<th scope="row">
+  <a routerLink="map/{{ restaurant._id }}">{{ restaurant.name }}</a>
+</th>
+<td>
+  <img
+    src="http://localhost:3000/uploads/{{ restaurant.image }}"
+    height="100"
+    width="100"
+    alt="no image"
+  />
+</td>
+<td>{{ restaurant.coordinate }}</td>
+<td>{{ restaurant.type }}</td>
+<td (click)="onDeleteRestaurant(restaurant)">
+  <fa-icon [icon]="faTimes" [ngStyle]="{ color: 'red' }" size="lg"></fa-icon>
+</td>

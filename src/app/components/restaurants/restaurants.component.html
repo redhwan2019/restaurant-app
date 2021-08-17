@@ -2,34 +2,19 @@
   (onAddRestaurant)="AddRestaurant($event)"
   [types]="types"
 ></app-add-restaurant>
-<div class="row">
-  <app-search-field (onSearchChanged)="onSearch($event)"></app-search-field>
-</div>
-<div class="row">
-  <div class="col-4">
-    <app-single-filter [types]="types" (onTypeChanged)="TypeChanged($event)">
-    </app-single-filter>
+<div style="padding: 0 8%">
+  <div class="row g-0">
+    <div class="col-5">
+      <app-search-field (onSearchChanged)="onSearch($event)"></app-search-field>
+    </div>
+    <div class="col-2">
+      <app-single-filter [types]="types" (onTypeChanged)="TypeChanged($event)">
+      </app-single-filter>
+    </div>
   </div>
+
+  <app-restaurants-table
+    [selectedType]="selectedType"
+    [searchText]="searchText"
+  ></app-restaurants-table>
 </div>
-
-<table class="table">
-  <thead class="bg-grey">
-    <tr>
-      <th scope="col">Restaurant Name</th>
-      <th scope="col">Coordinate</th>
-      <th scope="col">Type</th>
-      <th scope="col">Actions</th>
-    </tr>
-  </thead>
-
-  <tbody>
-    <tr
-      *ngFor="let restaurant of filteredRestaurants | tableFilter: selectedType"
-    >
-      <th scope="row">{{ restaurant.name }}</th>
-      <td>{{ restaurant.coordinate }}</td>
-      <td>{{ restaurant.type }}</td>
-      <td (click)="DeleteRestaurant(restaurant)">X</td>
-    </tr>
-  </tbody>
-</table>

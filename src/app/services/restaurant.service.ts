@@ -12,7 +12,7 @@ const httpOptions = {
   providedIn: 'root',
 })
 export class RestaurantService {
-  private apiUrl = 'http://localhost:3000'
+  private apiUrl = 'http://localhost:3000';
   restaurants: Restaurant[] = [];
   constructor(private http: HttpClient) {}
 
@@ -20,9 +20,21 @@ export class RestaurantService {
     return this.http.get<any>(`${this.apiUrl}/restaurants`);
   }
   addRestaurant(restaurant: Restaurant): Observable<any> {
-    return this.http.post<any>(`${this.apiUrl}/addRestaurant`,restaurant,httpOptions);
+    const formData = new FormData();
+    formData.append('image', restaurant.image);
+    formData.append('name', restaurant.name);
+    formData.append('coordinate', JSON.stringify(restaurant.coordinate));
+    formData.append('type', restaurant.type);
+    return this.http.post<any>(
+      `${this.apiUrl}/addRestaurant`,
+      formData
+      // httpOptions
+    );
   }
   deleteRestaurant(restaurant: Restaurant): Observable<any> {
-    return this.http.delete<any>(`${this.apiUrl}/deleteRestaurant/${restaurant._id}`);
+    console.log('delete route', restaurant);
+    return this.http.delete<any>(
+      `${this.apiUrl}/deleteRestaurant/${restaurant._id}`
+    );
   }
 }

@@ -1,10 +1,10 @@
 <div class="form-group">
-  <label for="exampleFormControlSelect2">Filter type</label>
+  <!-- <label for="exampleFormControlSelect2">Filter type</label> -->
   <select
     name="selectedType"
     [(ngModel)]="selectedType"
     (ngModelChange)="selectedTypechange($event)"
-    class="form-control"
+    class="form-select"
   >
     <option *ngFor="let type of types" [ngValue]="type">{{ type }}</option>
   </select>
