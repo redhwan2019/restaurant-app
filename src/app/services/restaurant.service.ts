@@ -12,7 +12,7 @@ const httpOptions = {
   providedIn: 'root',
 })
 export class RestaurantService {
-  private apiUrl = 'https://restaurants2021.herokuapp.com/';
+  private apiUrl = 'https://restaurants2021.herokuapp.com';
   restaurants: Restaurant[] = [];
   constructor(private http: HttpClient) {}
 
