@@ -13,14 +13,16 @@ const Restaurant = require("./models/Restaurant");
 const app = express();
 
 app.use(cors());
-app.use(express.static(__dirname + '/dist/my-app'));
+app.use(express.static(__dirname + "/dist/my-app"));
 
 //load config
 dotenv.config({ path: "./config/config.env" });
 // multer setup
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, "./public/uploads");
+    const path = "./public/uploads";
+    fs.mkdirSync(path, { recursive: true });
+    cb(null,path);
   },
   filename: function (req, file, cb) {
     const uniquePrefix = Date.now();
