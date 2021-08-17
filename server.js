@@ -20,7 +20,7 @@ dotenv.config({ path: "./config/config.env" });
 // multer setup
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    const path = "./public/uploads";
+    const path = "./dist/my-app/public/uploads";
     fs.mkdirSync(path, { recursive: true });
     cb(null,path);
   },
