@@ -2,18 +2,18 @@ const express = require("express");
 var cors = require("cors");
 const multer = require("multer");
 const dotenv = require("dotenv");
-const fs = require('fs')
-const { promisify } = require('util')
-
+const path = require("path");
+const fs = require("fs");
+const { promisify } = require("util");
 
 const connectDB = require("./config/db");
-const unlinkAsync = promisify(fs.unlink)
+const unlinkAsync = promisify(fs.unlink);
 
 const Restaurant = require("./models/Restaurant");
 const app = express();
 
 app.use(cors());
-app.use(express.static("public"));
+app.use(express.static(__dirname + '/dist/my-app'));
 
 //load config
 dotenv.config({ path: "./config/config.env" });
@@ -29,6 +29,7 @@ const storage = multer.diskStorage({
 });
 const upload = multer({ storage: storage });
 
+const port = process.env.PORT || process.env.Port;
 app.use(express.json());
 app.use(
   express.urlencoded({
@@ -73,9 +74,8 @@ app.post("/addRestaurant", upload.single("image"), async (req, res) => {
 app.delete("/deleteRestaurant/:id", async (req, res) => {
   const { id } = req.params;
   try {
-    
     const deletedResturant = await Restaurant.findByIdAndDelete(id);
-    await unlinkAsync("./public/uploads/"+deletedResturant.image)
+    await unlinkAsync("./public/uploads/" + deletedResturant.image);
     res.json({
       status: 200,
       message: "data delete successfuly",
@@ -88,12 +88,12 @@ app.delete("/deleteRestaurant/:id", async (req, res) => {
     });
   }
 });
+// app.get("*", function (req, res) {
+//     const fullPath = path.join(__dirname + "/dist/my-app/index.html");
+//     console.log(" Fetching from.." + fullPath);
+//     res.sendFile(fullPath);
+//   });
 
 connectDB();
 
-app.listen(
-  process.env.PORT,
-  console.log(
-    `server running in ${process.env.NODE_ENV} mode,  on port ${process.env.PORT}  `
-  )
-);
+app.listen(port, console.log(`server running on port ${port}  `));
