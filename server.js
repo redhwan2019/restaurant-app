@@ -5,11 +5,11 @@ const dotenv = require("dotenv");
 const path = require("path");
 const fs = require("fs");
 const { promisify } = require("util");
-
-const connectDB = require("./config/db");
 const unlinkAsync = promisify(fs.unlink);
 
+const connectDB = require("./config/db");
 const Restaurant = require("./models/Restaurant");
+
 const app = express();
 
 app.use(cors());

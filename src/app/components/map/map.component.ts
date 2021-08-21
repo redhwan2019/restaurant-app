@@ -12,12 +12,20 @@ import { Location } from '@angular/common';
   styleUrls: ['./map.component.css'],
 })
 export class MapComponent implements OnInit {
-  icon = {
+  defaultIcon = {
     icon: L.icon({
       iconSize: [25, 41],
       iconAnchor: [13, 0],
       // specify the path here
       iconUrl: './marker-icon.2b3e1faf89f94a483539.png',
+    }),
+  };
+  blackIcon = {
+    icon: L.icon({
+      iconSize: [25, 41],
+      iconAnchor: [13, 0],
+      // specify the path here
+      iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-black.png',
     }),
   };
   map: L.Map;
@@ -51,27 +59,24 @@ export class MapComponent implements OnInit {
   ngOnInit(): void {
     this.initMap();
     console.log('map inited');
+    this.selectedRestaurantId = this.route.snapshot.paramMap.get('id');
     this.store.select('restaurants').subscribe((data) => {
       this.restaurants = data;
-      this.selectedRestaurantId = this.route.snapshot.paramMap.get('id');
       this.restaurants.forEach((e) => {
         if (e._id == this.selectedRestaurantId) {
-          this.selectedRestaurant = e;
+          L.marker([e.coordinate[0], e.coordinate[1]], this.blackIcon)
+            .bindPopup(e.name)
+            .addTo(this.map);
+          this.map.setView([
+            e.coordinate[0],
+            e.coordinate[1],
+          ]);
+        } else {
+          L.marker([e.coordinate[0], e.coordinate[1]], this.defaultIcon)
+            .bindPopup(e.name)
+            .addTo(this.map);
         }
-        L.marker([e.coordinate[0], e.coordinate[1]], this.icon)
-          .bindPopup(e.name)
-          .addTo(this.map);
       });
-    });
-
-    this.map.eachLayer((layer: any) => {
-      if (layer.getPopup()?.getContent() == this.selectedRestaurant.name) {
-        layer._icon.style.backgroundColor = 'black';
-        this.map.panTo([
-          this.selectedRestaurant.coordinate[0],
-          this.selectedRestaurant.coordinate[1],
-        ]);
-      }
     });
   }
 }
