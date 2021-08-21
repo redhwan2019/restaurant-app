@@ -22,7 +22,7 @@ const storage = multer.diskStorage({
   destination: function (req, file, cb) {
     const path = "./dist/my-app/public/uploads";
     fs.mkdirSync(path, { recursive: true });
-    cb(null,path);
+    cb(null, path);
   },
   filename: function (req, file, cb) {
     const uniquePrefix = Date.now();
@@ -90,11 +90,10 @@ app.delete("/deleteRestaurant/:id", async (req, res) => {
     });
   }
 });
-// app.get("*", function (req, res) {
-//     const fullPath = path.join(__dirname + "/dist/my-app/index.html");
-//     console.log(" Fetching from.." + fullPath);
-//     res.sendFile(fullPath);
-//   });
+app.get("*", function (req, res) {
+  const fullPath = path.join(__dirname + "/dist/my-app/index.html");
+  res.sendFile(fullPath);
+});
 
 connectDB();
 
