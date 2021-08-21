@@ -12,6 +12,14 @@ import { Location } from '@angular/common';
   styleUrls: ['./map.component.css'],
 })
 export class MapComponent implements OnInit {
+  icon = {
+    icon: L.icon({
+      iconSize: [25, 41],
+      iconAnchor: [13, 0],
+      // specify the path here
+      iconUrl: './marker-icon.2b3e1faf89f94a483539.png',
+    }),
+  };
   map: L.Map;
   selectedRestaurantId: string | null;
   selectedRestaurant: Restaurant;
@@ -50,7 +58,7 @@ export class MapComponent implements OnInit {
         if (e._id == this.selectedRestaurantId) {
           this.selectedRestaurant = e;
         }
-        L.marker([e.coordinate[0], e.coordinate[1]])
+        L.marker([e.coordinate[0], e.coordinate[1]], this.icon)
           .bindPopup(e.name)
           .addTo(this.map);
       });
