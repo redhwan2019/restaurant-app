@@ -17,7 +17,7 @@ export class MapComponent implements OnInit {
       iconSize: [25, 41],
       iconAnchor: [13, 0],
       // specify the path here
-      iconUrl: './marker-icon.2b3e1faf89f94a483539.png',
+      iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-blue.png',
     }),
   };
   blackIcon = {

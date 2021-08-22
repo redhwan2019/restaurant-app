@@ -22,6 +22,7 @@ import { RestaurantsTableComponent } from './components/restaurants-table/restau
 import { faTimes } from '@fortawesome/free-solid-svg-icons';
 
 import { FontAwesomeModule, FaIconLibrary  } from '@fortawesome/angular-fontawesome';
+import { NavbarComponent } from './components/navbar/navbar.component';
 
 @NgModule({
   declarations: [
@@ -35,6 +36,7 @@ import { FontAwesomeModule, FaIconLibrary  } from '@fortawesome/angular-fontawes
     SearchFieldComponent,
     MapComponent,
     RestaurantsTableComponent,
+    NavbarComponent,
   ],
   imports: [
     BrowserModule,
