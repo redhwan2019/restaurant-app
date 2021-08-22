@@ -1,4 +1,4 @@
-<form (ngSubmit)="onSubmit()">
+<form [formGroup]="addRestaurantForm" (ngSubmit)="onSubmit()" #myform="ngForm">
   <div class="row">
     <div class="col">
       <div class="form-group">
@@ -6,10 +6,26 @@
         <input
           type="text"
           name="restaurantName"
-          [(ngModel)]="restaurantName"
+          formControlName="restaurantName"
           class="form-control"
           placeholder="Restaurant Name"
         />
+        <div
+          *ngIf="
+            addRestaurantForm.controls['restaurantName'].invalid &&
+            (addRestaurantForm.controls['restaurantName'].dirty ||
+              addRestaurantForm.controls['restaurantName'].touched)
+          "
+          class="text-danger"
+        >
+          <div
+            *ngIf="
+              addRestaurantForm.get('restaurantName')?.hasError('required')
+            "
+          >
+            Name is required
+          </div>
+        </div>
       </div>
     </div>
     <div class="col">
@@ -18,20 +34,45 @@
         <input
           type="text"
           name="restaurantCoordinate"
-          [(ngModel)]="restaurantCoordinate"
+          formControlName="restaurantCoordinate"
           class="form-control"
           placeholder="Coordinate"
         />
+        <div
+          *ngIf="
+            addRestaurantForm.controls['restaurantCoordinate'].invalid &&
+            (addRestaurantForm.controls['restaurantCoordinate'].dirty ||
+              addRestaurantForm.controls['restaurantCoordinate'].touched)
+          "
+          class="text-danger"
+        >
+          <div
+            *ngIf="
+              addRestaurantForm
+                .get('restaurantCoordinate')
+                ?.hasError('required')
+            "
+          >
+            Coordinate is required
+          </div>
+          <div
+            *ngIf="
+              addRestaurantForm.get('restaurantCoordinate')?.hasError('pattern')
+            "
+          >
+            Coordinate pattern invalid
+          </div>
+        </div>
       </div>
     </div>
   </div>
   <div class="row">
     <div class="col">
-      <label for="restaurantCoordinate"> Type</label>
+      <label for="restaurantType"> Type</label>
       <div class="form-group">
         <select
           name="restaurantType"
-          [(ngModel)]="restaurantType"
+          formControlName="restaurantType"
           class="form-select"
         >
           <option *ngFor="let type of types | slice: 1" [ngValue]="type">
@@ -46,15 +87,32 @@
         <input
           #imageInput
           type="file"
+          formControlName="restaurantImage"
           (change)="onFileSelect($event)"
           class="form-control"
-          id="exampleFormControlFile1"
+          id="restaurantImage"
         />
+        <div
+          *ngIf="
+            addRestaurantForm.controls['restaurantImage'].invalid &&
+            (addRestaurantForm.controls['restaurantImage'].dirty ||
+              addRestaurantForm.controls['restaurantImage'].touched ) 
+          "
+          class="text-danger"
+        >
+          <div
+            *ngIf="
+              addRestaurantForm.get('restaurantImage')?.hasError('required')
+            "
+          >
+            Image is required
+          </div>
+        </div>
       </div>
     </div>
   </div>
   <div class="row justify-content-md-center">
-    <div class="col-4  my-4">
+    <div class="col-4 my-4">
       <input
         type="submit"
         class="form-control bg-success text-white"

@@ -7,6 +7,7 @@ import {
   ViewChild,
   ElementRef,
 } from '@angular/core';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Restaurant } from '../../interfaces/restaurant';
 
 @Component({
@@ -18,10 +19,19 @@ export class AddRestaurantComponent implements OnInit {
   @Output() onAddRestaurant: EventEmitter<Restaurant> = new EventEmitter();
   @Input() types: string[];
   restaurantImageFile: File;
-  restaurantName: string;
-  restaurantCoordinate: string;
-  restaurantType: string = 'Fast Food';
+  // restaurantName: string;
+  // restaurantCoordinate: string;
+  // restaurantType: string = 'Fast Food';
   constructor() {}
+  addRestaurantForm = new FormGroup({
+    restaurantName: new FormControl('', [Validators.required]),
+    restaurantCoordinate: new FormControl('', [
+      Validators.required,
+      Validators.pattern('-?\\d+(\\.\\d+)?,\\s*-?\\d+(\\.\\d+)?'),
+    ]),
+    restaurantType: new FormControl('Fast Food', [Validators.required]),
+    restaurantImage: new FormControl('', [Validators.required]),
+  });
 
   @ViewChild('imageInput')
   imageInputRef: ElementRef;
@@ -32,33 +42,35 @@ export class AddRestaurantComponent implements OnInit {
     this.restaurantImageFile = event.target.files[0];
   }
   onSubmit() {
-    if (!this.restaurantName) {
-      alert('Please enter a restaurant name!');
-      return;
+    if (this.addRestaurantForm.valid) {
+      console.log('this.addRestaurantForm.valid', this.addRestaurantForm.valid);
+
+      const newRestaurant = {
+        name: this.addRestaurantForm.get('restaurantName')?.value,
+        coordinate:
+          this.addRestaurantForm
+            .get('restaurantCoordinate')
+            ?.value.split(',')
+            .map((c: string) => Number(c)) ?? [],
+        type: this.addRestaurantForm.get('restaurantType')?.value,
+        image: this.addRestaurantForm.get('restaurantImageFile')?.value,
+      };
+      console.log(newRestaurant);
+
+      // emit
+      this.onAddRestaurant.emit(newRestaurant);
+
+      this.addRestaurantForm.get('restaurantName')?.setValue('');
+      this.addRestaurantForm.get('restaurantName')?.markAsPending();
+      this.addRestaurantForm.get('restaurantName')?.markAsUntouched();
+
+      this.addRestaurantForm.get('restaurantCoordinate')?.setValue('');
+      this.addRestaurantForm.get('restaurantCoordinate')?.markAsPending();
+      this.addRestaurantForm.get('restaurantCoordinate')?.markAsUntouched();
+
+      this.imageInputRef.nativeElement.value = '';
+
+      console.log(this.addRestaurantForm);
     }
-    if (!this.restaurantCoordinate) {
-      alert('Please enter a restaurant coordinates!');
-      return;
-    }
-    if (this.restaurantCoordinate.indexOf(',') == -1){
-      alert('Please enter a valid restaurant coordinates seperated by ","!');
-      return;
-
-    };
-
-    const newRestaurant = {
-      name: this.restaurantName,
-      coordinate: this.restaurantCoordinate.split(',').map((c) => Number(c)),
-      type: this.restaurantType,
-      image: this.restaurantImageFile,
-    };
-    console.log(newRestaurant);
-
-    // emit
-    this.onAddRestaurant.emit(newRestaurant);
-
-    this.restaurantName = '';
-    this.restaurantCoordinate = '';
-    this.imageInputRef.nativeElement.value = '';
   }
 }
