@@ -40,11 +40,12 @@ export class AddRestaurantComponent implements OnInit {
       alert('Please enter a restaurant coordinates!');
       return;
     }
-    try {
-      this.restaurantCoordinate.split(',');
-    } catch (error) {
-      alert('Please enter a valid coordinates. eg: 123,123')
-    }
+    if (this.restaurantCoordinate.indexOf(',') == -1){
+      alert('Please enter a valid restaurant coordinates seperated by ","!');
+      return;
+
+    };
+
     const newRestaurant = {
       name: this.restaurantName,
       coordinate: this.restaurantCoordinate.split(',').map((c) => Number(c)),
